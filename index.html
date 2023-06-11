@@ -7,9 +7,15 @@
     <title>Vite App</title>
   </head>
   <body>
-    <div id="app"></div>
-    <img src="bg.jpg" id="bgImg" style="display: none"/>
-    <canvas id="canvasOutput"></canvas>
+    <div id="app">
+      <img id="bgImg" style="display: none"/>
+      <canvas id="canvasOutput"></canvas>
+      <div class="info">
+        <input type="file" id="bg-select" placeholder="Select background">
+        <span>FPS: </span>
+        <span id="fps"></span>
+      </div>
+    </div>
     <script src="https://docs.opencv.org/4.7.0/opencv.js"></script>
     <script type="module" src="/main.js"></script>
   </body>

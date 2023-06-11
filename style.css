@@ -71,6 +71,14 @@ canvas {
   color: #b02525;
 }
 
+.info {
+  display: flex;
+}
+
+#bg-select {
+  flex: 1;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
