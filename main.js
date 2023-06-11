@@ -2,10 +2,7 @@ import './style.css'
 
 let videoEl, cap, bgImg;
 let frameInput, frameInputRGB, frameOutput, frameGray, fgmask;
-let classifier = new cv.CascadeClassifier();
-let faces = new cv.RectVector();
-let bgdModel = new cv.Mat();
-let fgdModel = new cv.Mat();
+let classifier, faces, bgdModel, fgdModel;
 
 async function onLoad() {
   // Get camera stream
@@ -13,11 +10,15 @@ async function onLoad() {
   videoEl = document.createElement('video');
   videoEl.srcObject = stream;
   bgImg = document.getElementById('bgImg');
-  
+  classifier = new cv.CascadeClassifier();
+  faces = new cv.RectVector();
+  bgdModel = new cv.Mat();
+  fgdModel = new cv.Mat();
+
   document.getElementById('bg-select').addEventListener('change', (e) => {
     bgImg.src = URL.createObjectURL(e.target.files[0]);
   });
-  
+
   const faceRecResp = await fetch('haarcascade_frontalface_default.xml');
   const faceRecData = new Uint8Array(await faceRecResp.arrayBuffer());
   cv.FS_createDataFile('/', 'haarcascade_frontalface_default.xml', faceRecData, true, false, false);
