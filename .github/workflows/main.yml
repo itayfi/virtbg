@@ -37,7 +37,7 @@ jobs:
           version: 6.0.2
       - name: Install and Build
         run: |
-          pnpm ci
+          pnpm install --frozen-lockfile
           pnpm build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
