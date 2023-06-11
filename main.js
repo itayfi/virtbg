@@ -50,6 +50,7 @@ async function onLoad() {
 let lastDt = 0;
 function animate(dt) {
   let fps = 1000 / (dt - lastDt);
+  lastDt = dt;
   document.getElementById('fps').innerText = fps.toFixed(1);
   cap.read(frameInput);
   cv.cvtColor(frameInput, frameInputRGB, cv.COLOR_RGBA2RGB, 0);
