@@ -1,8 +1,9 @@
 import './style.css'
 
 let videoEl, cap, bgImg;
-let frameInput, frameInputRGB, frameOutput, frameGray, fgmask;
+let frameInput, frameInputRGB, frameOutput, frameGray, fgmask, fgmaskFull;
 let classifier, faces, bgdModel, fgdModel;
+const SCALE = 0.25;
 
 async function onLoad() {
   // Get camera stream
@@ -39,7 +40,8 @@ async function onLoad() {
     frameOutput = new cv.Mat(videoEl.height, videoEl.width, cv.CV_8UC4);
     frameInputRGB = new cv.Mat(videoEl.height, videoEl.width, cv.CV_8UC3);
     frameGray = new cv.Mat();
-    fgmask = new cv.Mat(videoEl.height, videoEl.width, cv.CV_8UC1);
+    fgmask = new cv.Mat(SCALE * videoEl.height, SCALE * videoEl.width, cv.CV_8UC1);
+    fgmaskFull = new cv.Mat(videoEl.height, videoEl.width, cv.CV_8UC1);
 
     cap = new cv.VideoCapture(videoEl);
     animate();
@@ -53,10 +55,14 @@ function animate(dt) {
   lastDt = dt;
   document.getElementById('fps').innerText = fps.toFixed(1);
   cap.read(frameInput);
+  
   cv.cvtColor(frameInput, frameInputRGB, cv.COLOR_RGBA2RGB, 0);
+  cv.resize(frameInputRGB, frameInputRGB, new cv.Size(0, 0), SCALE, SCALE, cv.INTER_AREA);
+
   frameOutput.setTo([0, 0, 0, 0]);
 
   cv.cvtColor(frameInput, frameGray, cv.COLOR_RGBA2GRAY, 0);
+  cv.resize(frameGray, frameGray, new cv.Size(0, 0), SCALE, SCALE, cv.INTER_AREA);
 
   classifier.detectMultiScale(frameGray, faces, 1.1, 3, 0);
 
@@ -85,7 +91,8 @@ function animate(dt) {
     }
   }
 
-  cv.add(frameOutput, frameInput, frameOutput, fgmask);
+  cv.resize(fgmask, fgmaskFull, fgmaskFull.size(), 0, 0, cv.INTER_LINEAR);
+  cv.add(frameOutput, frameInput, frameOutput, fgmaskFull);
 
   cv.imshow('canvasOutput', frameOutput);
   requestAnimationFrame(animate);
